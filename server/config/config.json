@@ -1,0 +1,26 @@
+{
+    "development": {
+        "username": "postgres",
+        "password": "payroll2020",
+        "database": "db-payrollcatalog-v1",
+        "host": "127.0.0.1",
+        "dialect": "postgres",
+        "operatorsAliases": false
+    },
+    "test": {
+        "username": "root",
+        "password": null,
+        "database": "database_test",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "operatorsAliases": false
+    },
+    "production": {
+        "username": "wcdnfzsjlcjbun",
+        "password": "cb13b09d9abcfdbe9c96ee8c5ba686b2978583cdda68e78588e2cfebceeb6c2c",
+        "database": "d510b0j8nouuj5",
+        "host": "ec2-54-175-117-212.compute-1.amazonaws.com",
+        "dialect": "postgres",
+        "operatorsAliases": false
+    }
+}
