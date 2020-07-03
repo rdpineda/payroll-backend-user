@@ -1,4 +1,5 @@
 const Tenant = require('../models').tenant;
+const User = require('../models').user;
 module.exports = (sequelize, DataTypes) => {
     const company = sequelize.define("company", {
         id: {
@@ -28,6 +29,21 @@ module.exports = (sequelize, DataTypes) => {
                 /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
             }
         },
+        idUser: {
+            type: DataTypes.UUID,
+
+            references: {
+                // This is a reference to another model
+                model: User,
+
+                // This is the column name of the referenced model
+                key: 'id',
+
+                // This declares when to check the foreign key constraint. PostgreSQL only.
+                /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
+            }
+        },
+        img: DataTypes.STRING,
 
     }, { freezeTableName: true });
 

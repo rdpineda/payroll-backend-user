@@ -4,14 +4,16 @@ var jwt = require('jsonwebtoken');
 const { Model, DataTypes, Deferrable } = require("sequelize");
 
 
-var SEED = require('../../config/config').SEED;
-
-var app = express();
-
 const Usuario = require('../models');
 const Company = require('../models');
 const UserCompany = require('../models');
 const Rol = require('../models');
+
+var SEED = require('../../config/config').SEED;
+
+var app = express();
+
+
 
 
 
@@ -152,42 +154,36 @@ app.post('/google', async(req, res) => {
 //autenticacion normal
 //====================================================
 
-app.post('/', (req, res) => {
-
+app.post('/', async(req, res) => {
     var body = req.body;
-
     Usuario.user.findOne({
-        where: { userName: body.userName },
-        include: { model }
-    })
-
-    .then(usuarioDB => {
-
+            where: { userName: body.userName }
+        })
+        .then(async usuarioDB => {
             if (!usuarioDB) {
                 return res.status(400).json({
                     ok: false,
                     err: {
                         mensaje: 'usuario no existe'
-
                     }
-
                 });
             }
-
             if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
-
                 return res.status(400).json({
                     ok: false,
                     err: {
                         mensaje: 'Credenciales incorrectas'
                     }
-
                 });
             }
-            //obtener empresa usuario logueado
 
-            //
+
+
             //crear token
+
+            var empresas = await obtenerEmpresas(usuarioDB.id);
+
+            var menu = obtenerMenu(usuarioDB.role);
             usuarioDB.password = ':)';
             var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 });
             res.status(200).json({
@@ -196,8 +192,9 @@ app.post('/', (req, res) => {
                 token: token,
                 id: usuarioDB.id,
                 role: usuarioDB.idRol,
-                empresas: obtenerEmpresas(),
-                menu: obtenerMenu(usuarioDB.role)
+                menu: menu,
+                empresas: empresas
+
 
 
             });
@@ -295,12 +292,26 @@ function obtenerMenu(role) {
 }
 
 
-const obtenerEmpresas = async(req, res) => {
-    const empresas = await UserCompany.userCompany.findAll({ where: { idUser: '6be454f0-aab5-11ea-88b8-8dd8cc3d0a51' } })
-        .then(empresas => {
-            return res.send(empresas);
-        })
+
+
+async function obtenerEmpresas(id) {
+
+    var empresas = await Company.company.findAll({
+
+        attributes: ['id', 'name', 'isActive', 'demoDay', 'img'],
+        where: { idUser: id },
+        raw: true
+    })
+
+    return empresas
 }
+
+
+
+
+
+
+
 
 
 module.exports = app;

@@ -1,6 +1,6 @@
 const Rol = require('../models').role;
 module.exports = (sequelize, DataTypes) => {
-    const usuario = sequelize.define("user", {
+    const usuario = sequelize.define('user', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
@@ -32,6 +32,6 @@ module.exports = (sequelize, DataTypes) => {
         },
 
     }, { freezeTableName: true });
-
+    /* console.log(usuario === sequelize.models.usuario); */
     return usuario;
 }

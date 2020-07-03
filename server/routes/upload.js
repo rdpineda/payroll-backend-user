@@ -5,8 +5,8 @@ var fs = require('fs');
 var app = express();
 
 const Usuario = require('../models');
-/* var Medico = require('../models/medico');
-var Hospital = require('../models/hospital'); */
+/* var Medico = require('../models/medico');*/
+const Company = require('../models');
 
 app.use(fileUpload());
 
@@ -17,7 +17,7 @@ app.put('/:tipo/:id', (req, res, next) => {
 
     //tipos de colecciones validas
 
-    var tiposValidos = ['hospitales', 'medicos', 'usuarios'];
+    var tiposValidos = ['companys', 'medicos', 'usuarios'];
 
     if (tiposValidos.indexOf(tipo) < 0) {
         return res.status(400).json({
@@ -163,42 +163,43 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
 
       } */
 
-    /* if (tipo === 'hospitales') {
+    if (tipo === 'companys') {
 
-        Hospital.findById(id, (err, hospital) => {
+        Company.company.findByPk(id)
+            .then(company => {
 
-            if (!hospital) {
+                var pathViejo = './uploads/companys/' + company.img;
+
+                //si existe elimina la imagen anterior
+
+                if (fs.existsSync(pathViejo)) {
+                    fs.unlink(pathViejo, (err) => {
+
+                    });
+                }
+
+                company.img = nombreArchivo;
+                company.save(company)
+                    .then(compañiaActualizada => {
+                        return res.status(200).json({
+                            ok: true,
+                            mensaje: 'Imagen de la compañia se ha actualizado',
+                            company: compañiaActualizada
+                        });
+                    })
+
+
+
+
+            })
+            .catch(err => {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'No existe el hospital',
-                    errors: { message: 'No existe el hospital' }
+                    mensaje: 'No existe la compañia',
+                    errors: { message: 'No existe la compañia' }
                 });
-            }
-
-            var pathViejo = './uploads/hospitales/' + hospital.img;
-
-            //si existe elimina la imagen anterior
-
-            if (fs.existsSync(pathViejo)) {
-                fs.unlink(pathViejo, (err) => {
-
-                });
-            }
-
-            hospital.img = nombreArchivo;
-            hospital.save((err, hospitalActualizado) => {
-
-                return res.status(200).json({
-                    ok: true,
-                    mensaje: 'Imagen del hospital actualizada',
-                    hospital: hospitalActualizado
-                });
-            });
-        })
-
-
-
-    } */
+            })
+    }
 
 }
 

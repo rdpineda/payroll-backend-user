@@ -66,6 +66,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
             company.name = body.name;
             company.demoDay = body.demoDay;
             company.idTenant = body.idTenant;
+            company.idUser = body.idUser;
 
             company.save(req.body)
                 .then(companyGuardado => {
@@ -109,7 +110,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 //===================================================
-//crear un nuevo usuario
+//crear una nueva empresa
 //===================================================
 
 app.post('/', (req, res) => {
@@ -123,6 +124,7 @@ app.post('/', (req, res) => {
         updateUser: body.updateUser,
         isActive: body.isActive,
         idTenant: body.idTenant,
+        idUser: body.idUser
 
 
     });
