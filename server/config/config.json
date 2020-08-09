@@ -7,6 +7,14 @@
         "dialect": "postgres",
         "operatorsAliases": false
     },
+    "developmentp": {
+        "username": "postgres",
+        "password": "payroll2020",
+        "database": "db-payroll-v1",
+        "host": "127.0.0.1",
+        "dialect": "postgres",
+        "operatorsAliases": false
+    },
     "test": {
         "username": "root",
         "password": null,

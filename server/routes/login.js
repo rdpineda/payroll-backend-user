@@ -242,8 +242,8 @@ function obtenerMenu(role) {
         },
 
         {
-            titulo: 'Empresa',
-            url: '/hospitales',
+            titulo: 'Compañia',
+            url: '/company',
             icono: 'mdi mdi-folder-lock-open',
             submenu: [
                 /*  //{ titulo: 'Usuarios', url: '/usuarios' },

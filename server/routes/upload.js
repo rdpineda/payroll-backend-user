@@ -7,6 +7,7 @@ var app = express();
 const Usuario = require('../models');
 /* var Medico = require('../models/medico');*/
 const Company = require('../models');
+const CompanyInfo = require('../models');
 
 app.use(fileUpload());
 
@@ -17,7 +18,7 @@ app.put('/:tipo/:id', (req, res, next) => {
 
     //tipos de colecciones validas
 
-    var tiposValidos = ['companys', 'medicos', 'usuarios'];
+    var tiposValidos = ['companys', 'medicos', 'usuarios', 'companyInfo'];
 
     if (tiposValidos.indexOf(tipo) < 0) {
         return res.status(400).json({
@@ -180,6 +181,44 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
 
                 company.img = nombreArchivo;
                 company.save(company)
+                    .then(compañiaActualizada => {
+                        return res.status(200).json({
+                            ok: true,
+                            mensaje: 'Imagen de la compañia se ha actualizado',
+                            company: compañiaActualizada
+                        });
+                    })
+
+
+
+
+            })
+            .catch(err => {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'No existe la compañia',
+                    errors: { message: 'No existe la compañia' }
+                });
+            })
+    }
+
+    if (tipo === 'companyInfo') {
+
+        CompanyInfo.companyInfo.findByPk(id)
+            .then(companyInfo => {
+
+                var pathViejo = './uploads/companyInfo/' + companyInfo.img;
+
+                //si existe elimina la imagen anterior
+
+                if (fs.existsSync(pathViejo)) {
+                    fs.unlink(pathViejo, (err) => {
+
+                    });
+                }
+
+                companyInfo.img = nombreArchivo;
+                companyInfo.save(companyInfo)
                     .then(compañiaActualizada => {
                         return res.status(200).json({
                             ok: true,

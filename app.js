@@ -39,6 +39,7 @@ app.use(bodyParser.json())
 var appRoutes = require('./server/routes/app');
 var usuarioRoutes = require('./server/routes/usuario');
 var companyRoutes = require('./server/routes/company');
+var companyInfoRoutes = require('./server/routes/companyInfo');
 /*var medicoRoutes = require('./routes/medico');
 var busquedaRoutes = require('./routes/busqueda');*/
 var uploadRoutes = require('./server/routes/upload');
@@ -67,6 +68,7 @@ app.use('/uploads', serveIndex(__dirname + '/uploads')); */
 
 app.use('/usuario', usuarioRoutes);
 app.use('/company', companyRoutes);
+app.use('/companyInfo', companyInfoRoutes);
 /* app.use('/hospital', hospitalRoutes);
 app.use('/medico', medicoRoutes);
 app.use('/busqueda', busquedaRoutes);*/
