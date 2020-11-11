@@ -1,12 +1,12 @@
 module.exports = (sequelizep, DataTypes) => {
-    const country = sequelizep.define('country', {
+    const spendingAccount = sequelizep.define('spendingAccount', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true
         },
         code: DataTypes.STRING,
-        name: DataTypes.STRING,
+        description: DataTypes.STRING,
         createdAt: DataTypes.DATE,
         createUser: DataTypes.STRING,
         updatedAt: DataTypes.DATE,
@@ -15,5 +15,5 @@ module.exports = (sequelizep, DataTypes) => {
 
     }, { freezeTableName: true });
 
-    return country;
+    return spendingAccount;
 }

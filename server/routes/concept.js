@@ -9,11 +9,11 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 
 var app = express();
-const Company = require('../models');
+const Concept = require('../models');
 
 
 //===================================================
-//Obtener todas las empresas
+//Obtener todos los conceptos
 //===================================================
 
 app.get('/', function(req, res) {
@@ -23,18 +23,18 @@ app.get('/', function(req, res) {
 
     /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
 
-    Company.company.findAll()
-        .then(companies => {
+    Concept.concept.findAll()
+        .then(concept => {
 
             res.status(200).json({
                 ok: true,
-                companies: companies
+                concept: concept
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando Empresas',
+                mensaje: 'Error cargando conceptos',
                 errors: err
             });
         })
@@ -42,31 +42,31 @@ app.get('/', function(req, res) {
 
 
 // ==========================================
-// Obtener una compañia por ID
+// Obtener un concepto por ID
 // ==========================================
 
-app.get('/company/:id', (req, res) => {
+app.get('/concept/:id', (req, res) => {
     var id = req.params.id;
-    Company.company.findByPk(id)
-        .then(company => {
+    Concept.concept.findByPk(id)
+        .then(concept => {
 
-            if (!company) {
+            if (!concept) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'La Compania con el id ruben ' + id + 'no existe',
-                    errors: { message: 'No existe una compañia ese ID' }
+                    mensaje: 'El concepto con el id' + id + 'no existe',
+                    errors: { message: 'No existe un concepto ese ID' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
+                concept: concept
 
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar empresa',
+                mensaje: 'Error al buscar concepto',
                 errors: err
             });
         })
@@ -77,7 +77,7 @@ app.get('/company/:id', (req, res) => {
 
 
 //===================================================
-//actualizar una empresa
+//actualizar un concepto
 //===================================================
 
 app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE_o_mismoUsuario], (req, res) => {
@@ -85,28 +85,25 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
     var id = req.params.id;
     var body = req.body;
 
-    Company.company.findByPk(id)
-        .then(companies => {
+    Concept.concept.findByPk(id)
+        .then(concept => {
 
-            /* if (!usuario) {
 
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'El usuario con el id' + id + 'no existe',
-                    errors: { message: 'No existe un usuario con ese ID' }
-                });
-            } */
+            concept.code = body.code;
+            concept.description = body.description;
+            concept.idConcepGroup = body.idConcepGroup;
+            concept.idConcepType = body.idConcepType;
+            concept.idCompany = body.idCompany;
+            concept.isActive = body.isActive;
+            concept.account = body.account;
+            concept.counterPart = body.counterPart
 
-            companies.name = body.name;
-            companies.demoDay = body.demoDay;
-            companies.idTenant = body.idTenant;
-            companies.idUser = body.idUser;
 
-            companies.save(req.body)
-                .then(companyGuardado => {
+            concept.save(req.body)
+                .then(conceptGuardado => {
                     res.status(201).json({
                         ok: true,
-                        companies: companyGuardado,
+                        concept: conceptGuardado,
                         // usuarioToken: req.usuario
                     });
 
@@ -114,7 +111,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                 .catch(err => {
                     return res.status(400).json({
                         ok: false,
-                        mensaje: 'Error al actualizar una empresa',
+                        mensaje: 'Error al actualizar un concepto',
                         error: err
                     });
 
@@ -124,8 +121,8 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'La empresa con el id ' + id + ' no existe',
-                errors: { message: 'No existe una empresa con ese ID' }
+                mensaje: 'El concepto con el id ' + id + ' no existe',
+                errors: { message: 'No existe un concepto con ese ID' }
             });
 
         })
@@ -144,30 +141,32 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 //===================================================
-//crear una nueva empresa
+//crear un nuevo concepto
 //===================================================
 
 app.post('/', (req, res) => {
     var body = req.body;
 
-    var company = new Company.company({
-        name: body.name,
-        startDemoDay: body.startDemoDay,
-        demoDay: body.demoDay,
+    var concept = new Concept.concept({
+        code: body.code,
+        description: body.description,
         createUser: body.createUser,
         updateUser: body.updateUser,
         isActive: body.isActive,
-        idTenant: body.idTenant,
-        idUser: body.idUser
+        idConcepGroup: body.idConcepGroup,
+        idConcepType: body.idConcepType,
+        idCompany: body.idCompany,
+        account: body.account,
+        counterPart: body.counterPart
 
 
     });
 
-    company.save(req.body)
-        .then(companyGuardado => {
+    concept.save(req.body)
+        .then(conceptGuardado => {
             res.status(201).json({
                 ok: true,
-                company: companyGuardado,
+                concept: conceptGuardado,
                 // usuarioToken: req.usuario
             });
 
@@ -175,7 +174,7 @@ app.post('/', (req, res) => {
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear una empresa',
+                mensaje: 'Error al crear un centro de costo',
                 err
             });
 
@@ -185,36 +184,36 @@ app.post('/', (req, res) => {
 });
 
 //===================================================
-//Eliminar una empresa
+//Eliminar un concepto
 //===================================================
 
 app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE], (req, res) => {
 
     var id = req.params.id;
 
-    Company.company.findByIdAndRemove(id, (err, companyEliminado) => {
+    Concept.concept.findByIdAndRemove(id, (err, conceptEliminado) => {
 
         if (err) {
 
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al eliminar una empresa',
+                mensaje: 'Error al eliminar un concepto',
                 errors: err
             });
         }
 
-        if (!companyEliminado) {
+        if (!conceptEliminado) {
 
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe empresa con ese ID',
-                errors: { message: 'No existe empresa con ese ID' }
+                mensaje: 'No existe concepto con ese ID',
+                errors: { message: 'No existe concepto con ese ID' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            company: companyEliminado
+            concept: conceptEliminado
         });
 
 
@@ -223,31 +222,37 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 });
 
 // ==========================================
-// Obtener una compañia por Usuario
+// Obtener conceptos por compañia
 // ==========================================
 
-app.get('/:iduser', (req, res) => {
-    var iduser = req.params.iduser;
-    Company.company.findAll({ where: { idUser: iduser } })
-        .then(company => {
+app.get('/:idcompany', (req, res) => {
+    var idcompany = req.params.idcompany;
+    const { Op } = require("sequelize");
+    // var idconceptGroup = '0f91a6e0-8192-4a2e-8022-989257fc2896';
+    Concept.concept.findAll({
+            where: {
+                [Op.or]: [{ idCompany: idcompany }, { idCompany: null }]
+            }
+        })
+        .then(concept => {
 
-            if (!company) {
+            if (!concept) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'El usuario ' + id + 'no tiene compañia',
-                    errors: { message: 'No existe una compañia para ese usuario' }
+                    mensaje: 'La compañia ' + id + 'no tiene conceptos',
+                    errors: { message: 'No existe un conceptos para esa compañia' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
+                concept: concept
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar compañia',
-                errors: err
+                mensaje: 'Error al buscar conceptos',
+                err: err
             });
         })
 

@@ -230,16 +230,6 @@ function obtenerMenu(role) {
                 { titulo: 'Medicos', url: '/medicos' } */
             ]
         },
-        {
-            titulo: 'Empleados',
-            url: '/medicos',
-            icono: 'mdi mdi-folder-lock-open',
-            submenu: [
-                /*  //{ titulo: 'Usuarios', url: '/usuarios' },
-                 { titulo: 'Hospitales', url: '/hospitales' },
-                 { titulo: 'Medicos', url: '/medicos' } */
-            ]
-        },
 
         {
             titulo: 'Compañia',
@@ -251,6 +241,19 @@ function obtenerMenu(role) {
                  { titulo: 'Medicos', url: '/medicos' } */
             ]
         },
+
+        {
+            titulo: 'Empleados',
+            url: '/employees',
+            icono: 'mdi mdi-folder-lock-open',
+            submenu: [
+                /*  //{ titulo: 'Usuarios', url: '/usuarios' },
+                 { titulo: 'Hospitales', url: '/hospitales' },
+                 { titulo: 'Medicos', url: '/medicos' } */
+            ]
+        },
+
+
         {
             titulo: 'Nóminas',
             icono: 'mdi mdi-folder-lock-open',
@@ -260,24 +263,24 @@ function obtenerMenu(role) {
                 { titulo: 'Históricos', url: '/medicos' }
             ]
         },
-        {
+        /* {
             titulo: 'Config Contable',
             icono: 'mdi mdi-folder-lock-open',
             submenu: [
-                /* { titulo: 'Ordinarias', url: '/usuarios' },
+                 { titulo: 'Ordinarias', url: '/usuarios' },
                 { titulo: 'Especiales', url: '/hospitales' },
-                { titulo: 'Históricos', url: '/medicos' } */
+                { titulo: 'Históricos', url: '/medicos' } 
             ]
-        },
-        {
+        }, */
+        /* {
             titulo: 'Reportes',
             icono: 'mdi mdi-folder-lock-open',
             submenu: [
-                /* { titulo: 'Ordinarias', url: '/usuarios' },
+                 { titulo: 'Ordinarias', url: '/usuarios' },
                 { titulo: 'Especiales', url: '/hospitales' },
-                { titulo: 'Históricos', url: '/medicos' } */
+                { titulo: 'Históricos', url: '/medicos' } 
             ]
-        }
+        } */
 
     ];
 

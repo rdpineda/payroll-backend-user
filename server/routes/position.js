@@ -9,11 +9,11 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 
 var app = express();
-const Company = require('../models');
+const Position = require('../models');
 
 
 //===================================================
-//Obtener todas las empresas
+//Obtener todos los cargos
 //===================================================
 
 app.get('/', function(req, res) {
@@ -23,18 +23,18 @@ app.get('/', function(req, res) {
 
     /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
 
-    Company.company.findAll()
-        .then(companies => {
+    Position.position.findAll()
+        .then(position => {
 
             res.status(200).json({
                 ok: true,
-                companies: companies
+                position: position
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando Empresas',
+                mensaje: 'Error cargando cargos',
                 errors: err
             });
         })
@@ -42,31 +42,31 @@ app.get('/', function(req, res) {
 
 
 // ==========================================
-// Obtener una compañia por ID
+// Obtener un cargo por ID
 // ==========================================
 
-app.get('/company/:id', (req, res) => {
+app.get('/:id/position', (req, res) => {
     var id = req.params.id;
-    Company.company.findByPk(id)
-        .then(company => {
+    Position.position.findAll({ where: { id: id } })
+        .then(position => {
 
-            if (!company) {
+            if (!position) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'La Compania con el id ruben ' + id + 'no existe',
-                    errors: { message: 'No existe una compañia ese ID' }
+                    mensaje: 'El cargo con el id' + id + 'no existe',
+                    errors: { message: 'No existe un cargo ese ID' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
+                position: position
 
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar empresa',
+                mensaje: 'Error al buscar cargos',
                 errors: err
             });
         })
@@ -77,7 +77,7 @@ app.get('/company/:id', (req, res) => {
 
 
 //===================================================
-//actualizar una empresa
+//actualizar cargos
 //===================================================
 
 app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE_o_mismoUsuario], (req, res) => {
@@ -85,28 +85,21 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
     var id = req.params.id;
     var body = req.body;
 
-    Company.company.findByPk(id)
-        .then(companies => {
+    Position.position.findByPk(id)
+        .then(position => {
 
-            /* if (!usuario) {
 
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'El usuario con el id' + id + 'no existe',
-                    errors: { message: 'No existe un usuario con ese ID' }
-                });
-            } */
 
-            companies.name = body.name;
-            companies.demoDay = body.demoDay;
-            companies.idTenant = body.idTenant;
-            companies.idUser = body.idUser;
+            position.description = body.description;
+            position.idCompany = body.idCompany;
+            position.isActive = body.isActive;
 
-            companies.save(req.body)
-                .then(companyGuardado => {
+
+            position.save(req.body)
+                .then(positionGuardado => {
                     res.status(201).json({
                         ok: true,
-                        companies: companyGuardado,
+                        position: positionGuardado,
                         // usuarioToken: req.usuario
                     });
 
@@ -114,7 +107,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                 .catch(err => {
                     return res.status(400).json({
                         ok: false,
-                        mensaje: 'Error al actualizar una empresa',
+                        mensaje: 'Error al actualizar un cargo',
                         error: err
                     });
 
@@ -124,8 +117,8 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'La empresa con el id ' + id + ' no existe',
-                errors: { message: 'No existe una empresa con ese ID' }
+                mensaje: 'El cargo con el id ' + id + ' no existe',
+                errors: { message: 'No existe un cargo con ese ID' }
             });
 
         })
@@ -144,38 +137,35 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 //===================================================
-//crear una nueva empresa
+//crear un cargo
 //===================================================
 
 app.post('/', (req, res) => {
     var body = req.body;
 
-    var company = new Company.company({
-        name: body.name,
-        startDemoDay: body.startDemoDay,
-        demoDay: body.demoDay,
+    var position = new Position.position({
+        description: body.description,
         createUser: body.createUser,
         updateUser: body.updateUser,
         isActive: body.isActive,
-        idTenant: body.idTenant,
-        idUser: body.idUser
+        idCompany: body.idCompany,
 
 
     });
 
-    company.save(req.body)
-        .then(companyGuardado => {
+    position.save(req.body)
+        .then(positionGuardado => {
             res.status(201).json({
                 ok: true,
-                company: companyGuardado,
-                // usuarioToken: req.usuario
+                position: positionGuardado,
+                //usuarioToken: req.usuario
             });
 
         })
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear una empresa',
+                mensaje: 'Error al crear un cargo',
                 err
             });
 
@@ -192,29 +182,29 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 
     var id = req.params.id;
 
-    Company.company.findByIdAndRemove(id, (err, companyEliminado) => {
+    Position.position.findByIdAndRemove(id, (err, positionEliminado) => {
 
         if (err) {
 
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al eliminar una empresa',
+                mensaje: 'Error al eliminar un cargo',
                 errors: err
             });
         }
 
-        if (!companyEliminado) {
+        if (!positionEliminado) {
 
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe empresa con ese ID',
-                errors: { message: 'No existe empresa con ese ID' }
+                mensaje: 'No existe cargo con ese ID',
+                errors: { message: 'No existe cargo con ese ID' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            company: companyEliminado
+            position: position
         });
 
 
@@ -223,30 +213,61 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 });
 
 // ==========================================
-// Obtener una compañia por Usuario
+// Obtener cargo por compañia
 // ==========================================
 
-app.get('/:iduser', (req, res) => {
-    var iduser = req.params.iduser;
-    Company.company.findAll({ where: { idUser: iduser } })
-        .then(company => {
+app.get('/:idcompany', (req, res) => {
+    var idcompany = req.params.idcompany;
+    Position.position.findAll({ where: { idCompany: idcompany } })
+        .then(position => {
 
-            if (!company) {
+            if (!position) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'El usuario ' + id + 'no tiene compañia',
-                    errors: { message: 'No existe una compañia para ese usuario' }
+                    mensaje: 'La compañia ' + id + 'no tiene cargos',
+                    errors: { message: 'No existe un cargod para esa compañia' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
+                position: position
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar compañia',
+                mensaje: 'Error al buscar cargos',
+                errors: err
+            });
+        })
+
+});
+
+//==========================================
+// Obtener cargo por compañia activos
+// ==========================================
+
+app.get('/:idcompany/isActive', (req, res) => {
+    var idcompany = req.params.idcompany;
+    Position.position.findAll({ where: { idCompany: idcompany, isActive: 'true' } })
+        .then(position => {
+
+            if (!position) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'La compañia ' + id + 'no tiene cargos',
+                    errors: { message: 'No existe un cargod para esa compañia' }
+                });
+            }
+            res.status(200).json({
+                ok: true,
+                position: position
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar cargos',
                 errors: err
             });
         })

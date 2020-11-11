@@ -99,6 +99,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
             company.name = body.name;
             company.address = body.address;
             company.phone = body.phone;
+            company.cellphone = body.cellphone;
             company.email = body.email;
             company.legalRepresentant = body.legalRepresentant;
             company.fundationDate = body.fundationDate;

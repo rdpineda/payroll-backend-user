@@ -8,6 +8,7 @@ const Usuario = require('../models');
 /* var Medico = require('../models/medico');*/
 const Company = require('../models');
 const CompanyInfo = require('../models');
+const Employee = require('../models');
 
 app.use(fileUpload());
 
@@ -18,7 +19,7 @@ app.put('/:tipo/:id', (req, res, next) => {
 
     //tipos de colecciones validas
 
-    var tiposValidos = ['companys', 'medicos', 'usuarios', 'companyInfo'];
+    var tiposValidos = ['companys', 'medicos', 'usuarios', 'companyInfo', 'employee'];
 
     if (tiposValidos.indexOf(tipo) < 0) {
         return res.status(400).json({
@@ -198,6 +199,44 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                     ok: false,
                     mensaje: 'No existe la compañia',
                     errors: { message: 'No existe la compañia' }
+                });
+            })
+    }
+
+    if (tipo === 'employee') {
+
+        Employee.employee.findByPk(id)
+            .then(employee => {
+
+                var pathViejo = './uploads/employee/' + employee.img;
+
+                //si existe elimina la imagen anterior
+
+                if (fs.existsSync(pathViejo)) {
+                    fs.unlink(pathViejo, (err) => {
+
+                    });
+                }
+
+                employee.img = nombreArchivo;
+                employee.save(employee)
+                    .then(employeeActualizada => {
+                        return res.status(200).json({
+                            ok: true,
+                            mensaje: 'Imagen del empleado se ha actualizado',
+                            employee: employeeActualizada
+                        });
+                    })
+
+
+
+
+            })
+            .catch(err => {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'No existe el empleado',
+                    errors: { message: 'No existe el empleado' }
                 });
             })
     }

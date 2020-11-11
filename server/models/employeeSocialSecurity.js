@@ -1,38 +1,30 @@
-const City = require('../models').city;
-const Tenant = require('../models').tenant;
-const State = require('../models').state;
-const Country = require('../models').country;
+const ContributorSubType = require('../models').contributorSubType;
+const ContributorType = require('../models').contributorType;
 const SocialSecurityEntity = require('../models').socialSecurityEntity;
-const IdentificationType = require('../models').identificationType;
+const Employee = require('../models').employee;
 
 module.exports = (sequelize, DataTypes) => {
-    const companyInfo = sequelize.define("companyInfo", {
+    const employeeSocialSecurity = sequelize.define("employeeSocialSecurity", {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true
         },
-        identification: DataTypes.STRING,
-        verificationNumber: DataTypes.STRING,
-        name: DataTypes.STRING,
-        address: DataTypes.STRING,
-        phone: DataTypes.STRING,
-        cellphone: DataTypes.STRING,
-        email: DataTypes.STRING,
-        legalRepresentant: DataTypes.STRING,
-        fundationDate: DataTypes.DATE,
-        img: DataTypes.STRING,
+
+
         createdAt: DataTypes.DATE,
         createUser: DataTypes.STRING,
         updatedAt: DataTypes.DATE,
         updateUser: DataTypes.STRING,
         isActive: DataTypes.BOOLEAN,
-        idTenant: {
+
+
+        idEmployee: {
             type: DataTypes.UUID,
 
             references: {
                 // This is a reference to another model
-                model: Tenant,
+                model: Employee,
 
                 // This is the column name of the referenced model
                 key: 'id',
@@ -41,12 +33,12 @@ module.exports = (sequelize, DataTypes) => {
                 /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
             }
         },
-        idCity: {
+        idContributorType: {
             type: DataTypes.UUID,
 
             references: {
                 // This is a reference to another model
-                model: City,
+                model: ContributorType,
 
                 // This is the column name of the referenced model
                 key: 'id',
@@ -55,12 +47,12 @@ module.exports = (sequelize, DataTypes) => {
                 /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
             }
         },
-        idState: {
+        idContributorSubType: {
             type: DataTypes.UUID,
 
             references: {
                 // This is a reference to another model
-                model: State,
+                model: ContributorSubType,
 
                 // This is the column name of the referenced model
                 key: 'id',
@@ -69,21 +61,7 @@ module.exports = (sequelize, DataTypes) => {
                 /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
             }
         },
-        idCountry: {
-            type: DataTypes.UUID,
-
-            references: {
-                // This is a reference to another model
-                model: Country,
-
-                // This is the column name of the referenced model
-                key: 'id',
-
-                // This declares when to check the foreign key constraint. PostgreSQL only.
-                /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
-            }
-        },
-        idEntityRisks: {
+        idEntityHealth: {
             type: DataTypes.UUID,
 
             references: {
@@ -97,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
                 /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
             }
         },
-        idCompensationFund: {
+        idEntityPension: {
             type: DataTypes.UUID,
 
             references: {
@@ -111,12 +89,12 @@ module.exports = (sequelize, DataTypes) => {
                 /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
             }
         },
-        idIdentificationType: {
+        idEntitySeverance: {
             type: DataTypes.UUID,
 
             references: {
                 // This is a reference to another model
-                model: IdentificationType,
+                model: SocialSecurityEntity,
 
                 // This is the column name of the referenced model
                 key: 'id',
@@ -125,9 +103,10 @@ module.exports = (sequelize, DataTypes) => {
                 /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
             }
         },
+
 
 
     }, { freezeTableName: true });
 
-    return companyInfo;
+    return employeeSocialSecurity;
 }

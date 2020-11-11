@@ -9,11 +9,11 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 
 var app = express();
-const Company = require('../models');
+const EmployeeJob = require('../models');
 
 
 //===================================================
-//Obtener todas las empresas
+//Obtener todos los contratos laborales del empleado
 //===================================================
 
 app.get('/', function(req, res) {
@@ -23,50 +23,49 @@ app.get('/', function(req, res) {
 
     /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
 
-    Company.company.findAll()
-        .then(companies => {
+    EmployeeJob.employeeJob.findAll()
+        .then(employeeJob => {
 
             res.status(200).json({
                 ok: true,
-                companies: companies
+                employeeJob: employeeJob
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando Empresas',
+                mensaje: 'Error cargando informacion del puesto de los empleados',
                 errors: err
             });
         })
 });
 
-
 // ==========================================
-// Obtener una compañia por ID
+// Obtener un contrato laboral por ID
 // ==========================================
 
-app.get('/company/:id', (req, res) => {
-    var id = req.params.id;
-    Company.company.findByPk(id)
-        .then(company => {
+app.get('/:idEmployee', (req, res) => {
+    var idEmployee = req.params.idEmployee;
+    // EmployeeJob.employeeJob.findByPk(idEmployee)
+    EmployeeJob.employeeJob.findAll({ where: { idEmployee: idEmployee } })
+        .then(employeeJob => {
 
-            if (!company) {
+            if (!employeeJob) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'La Compania con el id ruben ' + id + 'no existe',
-                    errors: { message: 'No existe una compañia ese ID' }
+                    mensaje: 'El empleado con el id ' + idEmployee + 'no existe',
+                    errors: { message: 'No existe el empleado ese ID' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
-
+                employeeJob: employeeJob
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar empresa',
+                mensaje: 'Error al buscar empleado',
                 errors: err
             });
         })
@@ -75,9 +74,8 @@ app.get('/company/:id', (req, res) => {
 
 
 
-
 //===================================================
-//actualizar una empresa
+//actualizar un contrato laboral del empleado
 //===================================================
 
 app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE_o_mismoUsuario], (req, res) => {
@@ -85,8 +83,8 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
     var id = req.params.id;
     var body = req.body;
 
-    Company.company.findByPk(id)
-        .then(companies => {
+    EmployeeJob.employeeJob.findByPk(id)
+        .then(employeeJob => {
 
             /* if (!usuario) {
 
@@ -97,16 +95,27 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                 });
             } */
 
-            companies.name = body.name;
-            companies.demoDay = body.demoDay;
-            companies.idTenant = body.idTenant;
-            companies.idUser = body.idUser;
 
-            companies.save(req.body)
-                .then(companyGuardado => {
+
+
+            employeeJob.createdAt = body.createdAt
+            employeeJob.createUser = body.createUser
+            employeeJob.updatedAt = body.updatedAt
+            employeeJob.updateUser = body.updateUser
+            employeeJob.isActive = body.isActive
+            employeeJob.idEmployee = body.idEmployee
+            employeeJob.idCostCenter = body.idCostCenter
+            employeeJob.idArea = body.idArea
+            employeeJob.idSubsidiary = body.idSubsidiary
+            employeeJob.idPosition = body.idPosition
+
+
+
+            employeeJob.save(req.body)
+                .then(employeeJobActualizado => {
                     res.status(201).json({
                         ok: true,
-                        companies: companyGuardado,
+                        employeeJob: employeeJobActualizado,
                         // usuarioToken: req.usuario
                     });
 
@@ -114,7 +123,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                 .catch(err => {
                     return res.status(400).json({
                         ok: false,
-                        mensaje: 'Error al actualizar una empresa',
+                        mensaje: 'Error al actualizar informacion del puesto del empleado',
                         error: err
                     });
 
@@ -124,8 +133,8 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'La empresa con el id ' + id + ' no existe',
-                errors: { message: 'No existe una empresa con ese ID' }
+                mensaje: 'El empleado con el id ' + id + ' no existe',
+                errors: { message: 'No existe el empleado con ese ID' }
             });
 
         })
@@ -144,30 +153,34 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 //===================================================
-//crear una nueva empresa
+//crear un contrato laboral del empleado
 //===================================================
 
-app.post('/', (req, res) => {
+app.post('/', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE_o_mismoUsuario], (req, res) => {
     var body = req.body;
 
-    var company = new Company.company({
-        name: body.name,
-        startDemoDay: body.startDemoDay,
-        demoDay: body.demoDay,
+    var employeeJob = new EmployeeJob.employeeJob({
+
+
+        id: body.id,
         createUser: body.createUser,
         updateUser: body.updateUser,
         isActive: body.isActive,
-        idTenant: body.idTenant,
-        idUser: body.idUser
+        idEmployee: body.idEmployee,
+        idCostCenter: body.idCostCenter,
+        idArea: body.idArea,
+        idSubsidiary: body.idSubsidiary,
+        idPosition: body.idPosition
+
 
 
     });
 
-    company.save(req.body)
-        .then(companyGuardado => {
+    employeeJob.save(req.body)
+        .then(employeeJobGuardado => {
             res.status(201).json({
                 ok: true,
-                company: companyGuardado,
+                employeeJob: employeeJobGuardado,
                 // usuarioToken: req.usuario
             });
 
@@ -175,7 +188,7 @@ app.post('/', (req, res) => {
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear una empresa',
+                mensaje: 'Error al crear informacion del puesto del empleado',
                 err
             });
 
@@ -185,71 +198,40 @@ app.post('/', (req, res) => {
 });
 
 //===================================================
-//Eliminar una empresa
+//Eliminar un contrato laboral del empleado
 //===================================================
 
 app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE], (req, res) => {
 
     var id = req.params.id;
 
-    Company.company.findByIdAndRemove(id, (err, companyEliminado) => {
+    EmployeeJob.employeeJob.findByIdAndRemove(id, (err, employeeJobEliminado) => {
 
         if (err) {
 
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al eliminar una empresa',
+                mensaje: 'Error al eliminar informacion del puesto del empleado',
                 errors: err
             });
         }
 
-        if (!companyEliminado) {
+        if (!employeeJobEliminado) {
 
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe empresa con ese ID',
-                errors: { message: 'No existe empresa con ese ID' }
+                mensaje: 'No existe empleado con ese ID',
+                errors: { message: 'No existe empleado con ese ID' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            company: companyEliminado
+            employeeJob: employeeJobEliminado
         });
 
 
     });
-
-});
-
-// ==========================================
-// Obtener una compañia por Usuario
-// ==========================================
-
-app.get('/:iduser', (req, res) => {
-    var iduser = req.params.iduser;
-    Company.company.findAll({ where: { idUser: iduser } })
-        .then(company => {
-
-            if (!company) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'El usuario ' + id + 'no tiene compañia',
-                    errors: { message: 'No existe una compañia para ese usuario' }
-                });
-            }
-            res.status(200).json({
-                ok: true,
-                company: company
-            });
-        })
-        .catch(err => {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error al buscar compañia',
-                errors: err
-            });
-        })
 
 });
 

@@ -9,11 +9,11 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 
 var app = express();
-const Company = require('../models');
+const Subsidiary = require('../models');
 
 
 //===================================================
-//Obtener todas las empresas
+//Obtener todas las sucursales
 //===================================================
 
 app.get('/', function(req, res) {
@@ -23,18 +23,18 @@ app.get('/', function(req, res) {
 
     /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
 
-    Company.company.findAll()
-        .then(companies => {
+    Subsidiary.subsidiary.findAll()
+        .then(subsidiary => {
 
             res.status(200).json({
                 ok: true,
-                companies: companies
+                subsidiary: subsidiary
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando Empresas',
+                mensaje: 'Error cargando sucursales',
                 errors: err
             });
         })
@@ -42,31 +42,31 @@ app.get('/', function(req, res) {
 
 
 // ==========================================
-// Obtener una compañia por ID
+// Obtener una sucursal por ID
 // ==========================================
 
-app.get('/company/:id', (req, res) => {
+app.get('/:id/subsidiary', (req, res) => {
     var id = req.params.id;
-    Company.company.findByPk(id)
-        .then(company => {
+    Subsidiary.subsidiary.findAll({ where: { id: id } })
+        .then(subsidiary => {
 
-            if (!company) {
+            if (!subsidiary) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'La Compania con el id ruben ' + id + 'no existe',
-                    errors: { message: 'No existe una compañia ese ID' }
+                    mensaje: 'la sucursal con el id' + id + 'no existe',
+                    errors: { message: 'No existe un sucursal ese ID' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
+                subsidiary: subsidiary
 
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar empresa',
+                mensaje: 'Error al buscar sucursal',
                 errors: err
             });
         })
@@ -77,7 +77,7 @@ app.get('/company/:id', (req, res) => {
 
 
 //===================================================
-//actualizar una empresa
+//actualizar sucursales
 //===================================================
 
 app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE_o_mismoUsuario], (req, res) => {
@@ -85,28 +85,21 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
     var id = req.params.id;
     var body = req.body;
 
-    Company.company.findByPk(id)
-        .then(companies => {
+    Subsidiary.subsidiary.findByPk(id)
+        .then(subsidiary => {
 
-            /* if (!usuario) {
 
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'El usuario con el id' + id + 'no existe',
-                    errors: { message: 'No existe un usuario con ese ID' }
-                });
-            } */
 
-            companies.name = body.name;
-            companies.demoDay = body.demoDay;
-            companies.idTenant = body.idTenant;
-            companies.idUser = body.idUser;
+            subsidiary.description = body.description;
+            subsidiary.idCompany = body.idCompany;
+            subsidiary.isActive = body.isActive;
 
-            companies.save(req.body)
-                .then(companyGuardado => {
+
+            subsidiary.save(req.body)
+                .then(subsidiaryGuardado => {
                     res.status(201).json({
                         ok: true,
-                        companies: companyGuardado,
+                        subsidiary: subsidiaryGuardado,
                         // usuarioToken: req.usuario
                     });
 
@@ -114,7 +107,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                 .catch(err => {
                     return res.status(400).json({
                         ok: false,
-                        mensaje: 'Error al actualizar una empresa',
+                        mensaje: 'Error al actualizar un sucursal',
                         error: err
                     });
 
@@ -124,8 +117,8 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'La empresa con el id ' + id + ' no existe',
-                errors: { message: 'No existe una empresa con ese ID' }
+                mensaje: 'El sucursal con el id ' + id + ' no existe',
+                errors: { message: 'No existe un sucursal con ese ID' }
             });
 
         })
@@ -144,30 +137,27 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 //===================================================
-//crear una nueva empresa
+//crear una area
 //===================================================
 
 app.post('/', (req, res) => {
     var body = req.body;
 
-    var company = new Company.company({
-        name: body.name,
-        startDemoDay: body.startDemoDay,
-        demoDay: body.demoDay,
+    var subsidiary = new Subsidiary.subsidiary({
+        description: body.description,
         createUser: body.createUser,
         updateUser: body.updateUser,
         isActive: body.isActive,
-        idTenant: body.idTenant,
-        idUser: body.idUser
+        idCompany: body.idCompany,
 
 
     });
 
-    company.save(req.body)
-        .then(companyGuardado => {
+    subsidiary.save(req.body)
+        .then(subsidiaryGuardado => {
             res.status(201).json({
                 ok: true,
-                company: companyGuardado,
+                subsidiary: subsidiaryGuardado,
                 // usuarioToken: req.usuario
             });
 
@@ -175,7 +165,7 @@ app.post('/', (req, res) => {
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear una empresa',
+                mensaje: 'Error al crear una sucursal',
                 err
             });
 
@@ -192,29 +182,29 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 
     var id = req.params.id;
 
-    Company.company.findByIdAndRemove(id, (err, companyEliminado) => {
+    Subsidiary.subsidiary.findByIdAndRemove(id, (err, subsidiaryEliminado) => {
 
         if (err) {
 
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al eliminar una empresa',
+                mensaje: 'Error al eliminar una sucursal',
                 errors: err
             });
         }
 
-        if (!companyEliminado) {
+        if (!subsidiaryEliminado) {
 
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe empresa con ese ID',
-                errors: { message: 'No existe empresa con ese ID' }
+                mensaje: 'No existe sucursal con ese ID',
+                errors: { message: 'No existe sucursal con ese ID' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            company: companyEliminado
+            subsidiary: subsidiary
         });
 
 
@@ -223,30 +213,72 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 });
 
 // ==========================================
-// Obtener una compañia por Usuario
+// Obtener sucursales por compañia
 // ==========================================
 
-app.get('/:iduser', (req, res) => {
-    var iduser = req.params.iduser;
-    Company.company.findAll({ where: { idUser: iduser } })
-        .then(company => {
+app.get('/:idcompany', (req, res) => {
+    var idcompany = req.params.idcompany;
+    Subsidiary.subsidiary.findAll({
+            where: {
+                idCompany: idcompany
 
-            if (!company) {
+            }
+        })
+        .then(subsidiary => {
+
+            if (!subsidiary) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'El usuario ' + id + 'no tiene compañia',
-                    errors: { message: 'No existe una compañia para ese usuario' }
+                    mensaje: 'La compañia ' + id + 'no tiene sucursales',
+                    errors: { message: 'No existe un sucursales para esa compañia' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
+                subsidiary: subsidiary
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar compañia',
+                mensaje: 'Error al buscar sucursales',
+                errors: err
+            });
+        })
+
+});
+
+
+// ==========================================
+// Obtener sucursales por compañia activas
+// ==========================================
+
+app.get('/:idcompany/isActive', (req, res) => {
+    var idcompany = req.params.idcompany;
+    Subsidiary.subsidiary.findAll({
+            where: {
+                idCompany: idcompany,
+                isActive: 'true'
+            }
+        })
+        .then(subsidiary => {
+
+            if (!subsidiary) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'La compañia ' + id + 'no tiene sucursales',
+                    errors: { message: 'No existe un sucursales para esa compañia' }
+                });
+            }
+            res.status(200).json({
+                ok: true,
+                subsidiary: subsidiary
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar sucursales',
                 errors: err
             });
         })

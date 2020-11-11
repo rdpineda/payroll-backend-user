@@ -1,19 +1,18 @@
 module.exports = (sequelizep, DataTypes) => {
-    const country = sequelizep.define('country', {
+    const workPlaceRisks = sequelizep.define('workPlaceRisks', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true
         },
         code: DataTypes.STRING,
-        name: DataTypes.STRING,
-        createdAt: DataTypes.DATE,
+        description: DataTypes.STRING,
+        percentaje: DataTypes.NUMBER,
         createUser: DataTypes.STRING,
-        updatedAt: DataTypes.DATE,
         updateUser: DataTypes.STRING,
         isActive: DataTypes.BOOLEAN
 
     }, { freezeTableName: true });
 
-    return country;
+    return workPlaceRisks;
 }

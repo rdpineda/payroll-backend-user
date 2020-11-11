@@ -1,19 +1,19 @@
 module.exports = (sequelizep, DataTypes) => {
-    const country = sequelizep.define('country', {
+    const conceptGroup = sequelizep.define('conceptGroup', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true
         },
-        code: DataTypes.STRING,
-        name: DataTypes.STRING,
+        description: DataTypes.STRING,
         createdAt: DataTypes.DATE,
         createUser: DataTypes.STRING,
         updatedAt: DataTypes.DATE,
         updateUser: DataTypes.STRING,
-        isActive: DataTypes.BOOLEAN
+        isActive: DataTypes.BOOLEAN,
+
 
     }, { freezeTableName: true });
-
-    return country;
+    /* console.log(usuario === sequelize.models.usuario); */
+    return conceptGroup;
 }

@@ -9,11 +9,11 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 
 var app = express();
-const Company = require('../models');
+const Area = require('../models');
 
 
 //===================================================
-//Obtener todas las empresas
+//Obtener todas las areas
 //===================================================
 
 app.get('/', function(req, res) {
@@ -23,18 +23,18 @@ app.get('/', function(req, res) {
 
     /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
 
-    Company.company.findAll()
-        .then(companies => {
+    Area.area.findAll()
+        .then(area => {
 
             res.status(200).json({
                 ok: true,
-                companies: companies
+                area: area
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando Empresas',
+                mensaje: 'Error cargando Areas',
                 errors: err
             });
         })
@@ -42,31 +42,31 @@ app.get('/', function(req, res) {
 
 
 // ==========================================
-// Obtener una compañia por ID
+// Obtener un area por ID
 // ==========================================
 
-app.get('/company/:id', (req, res) => {
+app.get('/:id/area', (req, res) => {
     var id = req.params.id;
-    Company.company.findByPk(id)
-        .then(company => {
+    Area.area.findAll({ where: { id: id } })
+        .then(area => {
 
-            if (!company) {
+            if (!area) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'La Compania con el id ruben ' + id + 'no existe',
-                    errors: { message: 'No existe una compañia ese ID' }
+                    mensaje: 'El area con el id' + id + 'no existe',
+                    errors: { message: 'No existe un area ese ID' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
+                area: area
 
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar empresa',
+                mensaje: 'Error al buscar area',
                 errors: err
             });
         })
@@ -77,7 +77,7 @@ app.get('/company/:id', (req, res) => {
 
 
 //===================================================
-//actualizar una empresa
+//actualizar areas
 //===================================================
 
 app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE_o_mismoUsuario], (req, res) => {
@@ -85,28 +85,21 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
     var id = req.params.id;
     var body = req.body;
 
-    Company.company.findByPk(id)
-        .then(companies => {
+    Area.area.findByPk(id)
+        .then(area => {
 
-            /* if (!usuario) {
 
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'El usuario con el id' + id + 'no existe',
-                    errors: { message: 'No existe un usuario con ese ID' }
-                });
-            } */
 
-            companies.name = body.name;
-            companies.demoDay = body.demoDay;
-            companies.idTenant = body.idTenant;
-            companies.idUser = body.idUser;
+            area.description = body.description;
+            area.idCompany = body.idCompany;
+            area.isActive = body.isActive;
 
-            companies.save(req.body)
-                .then(companyGuardado => {
+
+            area.save(req.body)
+                .then(areaGuardado => {
                     res.status(201).json({
                         ok: true,
-                        companies: companyGuardado,
+                        area: areaGuardado,
                         // usuarioToken: req.usuario
                     });
 
@@ -114,7 +107,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                 .catch(err => {
                     return res.status(400).json({
                         ok: false,
-                        mensaje: 'Error al actualizar una empresa',
+                        mensaje: 'Error al actualizar un area',
                         error: err
                     });
 
@@ -124,8 +117,8 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'La empresa con el id ' + id + ' no existe',
-                errors: { message: 'No existe una empresa con ese ID' }
+                mensaje: 'El area con el id ' + id + ' no existe',
+                errors: { message: 'No existe un area con ese ID' }
             });
 
         })
@@ -144,30 +137,27 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 //===================================================
-//crear una nueva empresa
+//crear una area
 //===================================================
 
 app.post('/', (req, res) => {
     var body = req.body;
 
-    var company = new Company.company({
-        name: body.name,
-        startDemoDay: body.startDemoDay,
-        demoDay: body.demoDay,
+    var area = new Area.area({
+        description: body.description,
         createUser: body.createUser,
         updateUser: body.updateUser,
         isActive: body.isActive,
-        idTenant: body.idTenant,
-        idUser: body.idUser
+        idCompany: body.idCompany,
 
 
     });
 
-    company.save(req.body)
-        .then(companyGuardado => {
+    area.save(req.body)
+        .then(areaGuardado => {
             res.status(201).json({
                 ok: true,
-                company: companyGuardado,
+                area: areaGuardado,
                 // usuarioToken: req.usuario
             });
 
@@ -175,7 +165,7 @@ app.post('/', (req, res) => {
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear una empresa',
+                mensaje: 'Error al crear un area',
                 err
             });
 
@@ -192,29 +182,29 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 
     var id = req.params.id;
 
-    Company.company.findByIdAndRemove(id, (err, companyEliminado) => {
+    Area.area.findByIdAndRemove(id, (err, areaEliminado) => {
 
         if (err) {
 
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al eliminar una empresa',
+                mensaje: 'Error al eliminar un area',
                 errors: err
             });
         }
 
-        if (!companyEliminado) {
+        if (!areaEliminado) {
 
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe empresa con ese ID',
-                errors: { message: 'No existe empresa con ese ID' }
+                mensaje: 'No existe area con ese ID',
+                errors: { message: 'No existe area con ese ID' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            company: companyEliminado
+            area: area
         });
 
 
@@ -223,35 +213,68 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 });
 
 // ==========================================
-// Obtener una compañia por Usuario
+// Obtener area por compañia
 // ==========================================
 
-app.get('/:iduser', (req, res) => {
-    var iduser = req.params.iduser;
-    Company.company.findAll({ where: { idUser: iduser } })
-        .then(company => {
+app.get('/:idcompany', (req, res) => {
+    var idcompany = req.params.idcompany;
+    Area.area.findAll({ where: { idCompany: idcompany } })
+        .then(area => {
 
-            if (!company) {
+            if (!area) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'El usuario ' + id + 'no tiene compañia',
-                    errors: { message: 'No existe una compañia para ese usuario' }
+                    mensaje: 'La compañia ' + id + 'no tiene areas',
+                    errors: { message: 'No existe un areas para esa compañia' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
+                area: area
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar compañia',
+                mensaje: 'Error al buscar areas',
                 errors: err
             });
         })
 
 });
+
+
+// ==========================================
+// Obtener area por compañia activos
+// ==========================================
+
+app.get('/:idcompany/isActive', (req, res) => {
+    var idcompany = req.params.idcompany;
+    Area.area.findAll({ where: { idCompany: idcompany, isActive: 'true' } })
+        .then(area => {
+
+            if (!area) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'La compañia ' + id + 'no tiene areas',
+                    errors: { message: 'No existe un areas para esa compañia' }
+                });
+            }
+            res.status(200).json({
+                ok: true,
+                area: area
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar areas',
+                errors: err
+            });
+        })
+
+});
+
 
 
 module.exports = app;

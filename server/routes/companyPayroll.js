@@ -9,7 +9,7 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 
 var app = express();
-const Company = require('../models');
+const CompanyPayroll = require('../models');
 
 
 //===================================================
@@ -23,56 +23,53 @@ app.get('/', function(req, res) {
 
     /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
 
-    Company.company.findAll()
-        .then(companies => {
+    CompanyPayroll.companyPayroll.findAll()
+        .then(companyPayroll => {
 
             res.status(200).json({
                 ok: true,
-                companies: companies
+                companyPayroll: companyPayroll
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando Empresas',
+                mensaje: 'Error cargando datos de nomina',
                 errors: err
             });
         })
 });
-
 
 // ==========================================
 // Obtener una compañia por ID
 // ==========================================
 
-app.get('/company/:id', (req, res) => {
+app.get('/:id', (req, res) => {
     var id = req.params.id;
-    Company.company.findByPk(id)
-        .then(company => {
+    CompanyPayroll.companyPayroll.findByPk(id)
+        .then(companyPayroll => {
 
-            if (!company) {
+            if (!companyPayroll) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'La Compania con el id ruben ' + id + 'no existe',
+                    mensaje: 'La Compania con el id ' + id + 'no existe',
                     errors: { message: 'No existe una compañia ese ID' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                company: company
-
+                companyPayroll: companyPayroll
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar empresa',
+                mensaje: 'Error al buscar compañia',
                 errors: err
             });
         })
 
 });
-
 
 
 
@@ -85,28 +82,24 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
     var id = req.params.id;
     var body = req.body;
 
-    Company.company.findByPk(id)
-        .then(companies => {
+    CompanyPayroll.companyPayroll.findByPk(id)
+        .then(companyPayroll => {
 
-            /* if (!usuario) {
 
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'El usuario con el id' + id + 'no existe',
-                    errors: { message: 'No existe un usuario con ese ID' }
-                });
-            } */
 
-            companies.name = body.name;
-            companies.demoDay = body.demoDay;
-            companies.idTenant = body.idTenant;
-            companies.idUser = body.idUser;
+            companyPayroll.createdAt = body.createdAt
+            companyPayroll.createUser = body.createUser
+            companyPayroll.updatedAt = body.updatedAt
+            companyPayroll.updateUser = body.updateUser
+            companyPayroll.isActive = body.isActive
+            companyPayroll.idTenant = body.idTenant
 
-            companies.save(req.body)
-                .then(companyGuardado => {
+
+            companyPayroll.save(req.body)
+                .then(companyPayrollActualizado => {
                     res.status(201).json({
                         ok: true,
-                        companies: companyGuardado,
+                        companyPayroll: companyPayrollActualizado,
                         // usuarioToken: req.usuario
                     });
 
@@ -114,7 +107,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                 .catch(err => {
                     return res.status(400).json({
                         ok: false,
-                        mensaje: 'Error al actualizar una empresa',
+                        mensaje: 'Error al actualizar la compañia',
                         error: err
                     });
 
@@ -124,8 +117,8 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'La empresa con el id ' + id + ' no existe',
-                errors: { message: 'No existe una empresa con ese ID' }
+                mensaje: 'La compañia con el id ' + id + ' no existe',
+                errors: { message: 'No existe una compañia con ese ID' }
             });
 
         })
@@ -150,24 +143,23 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 app.post('/', (req, res) => {
     var body = req.body;
 
-    var company = new Company.company({
-        name: body.name,
-        startDemoDay: body.startDemoDay,
-        demoDay: body.demoDay,
+    var companyPayroll = new CompanyPayroll.companyPayroll({
+
+
+        id: body.id,
         createUser: body.createUser,
         updateUser: body.updateUser,
         isActive: body.isActive,
         idTenant: body.idTenant,
-        idUser: body.idUser
 
 
     });
 
-    company.save(req.body)
-        .then(companyGuardado => {
+    companyPayroll.save(req.body)
+        .then(companyPayrollGuardado => {
             res.status(201).json({
                 ok: true,
-                company: companyGuardado,
+                companyPayroll: companyPayrollGuardado,
                 // usuarioToken: req.usuario
             });
 
@@ -192,7 +184,7 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 
     var id = req.params.id;
 
-    Company.company.findByIdAndRemove(id, (err, companyEliminado) => {
+    CompanyPayroll.companyPayroll.findByIdAndRemove(id, (err, companyPayrollEliminado) => {
 
         if (err) {
 
@@ -203,7 +195,7 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
             });
         }
 
-        if (!companyEliminado) {
+        if (!companyPayrollEliminado) {
 
             return res.status(400).json({
                 ok: false,
@@ -214,42 +206,11 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 
         res.status(200).json({
             ok: true,
-            company: companyEliminado
+            companyPayroll: companyPayrollEliminado
         });
 
 
     });
-
-});
-
-// ==========================================
-// Obtener una compañia por Usuario
-// ==========================================
-
-app.get('/:iduser', (req, res) => {
-    var iduser = req.params.iduser;
-    Company.company.findAll({ where: { idUser: iduser } })
-        .then(company => {
-
-            if (!company) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'El usuario ' + id + 'no tiene compañia',
-                    errors: { message: 'No existe una compañia para ese usuario' }
-                });
-            }
-            res.status(200).json({
-                ok: true,
-                company: company
-            });
-        })
-        .catch(err => {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error al buscar compañia',
-                errors: err
-            });
-        })
 
 });
 
