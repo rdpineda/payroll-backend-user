@@ -85,7 +85,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
     var body = req.body;
 
     EmployeeSocialSecurity.employeeSocialSecurity.findByPk(id)
-        .then(employeeJob => {
+        .then(employeeSocialSecurity => {
 
             /* if (!usuario) {
 
@@ -99,17 +99,17 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 
-            employeeSocialSecurity.createdAt = body.createdAt
-            employeeSocialSecurity.createUser = body.createUser
-            employeeSocialSecurity.updatedAt = body.updatedAt
-            employeeSocialSecurity.updateUser = body.updateUser
-            employeeSocialSecurity.isActive = body.isActive
-            employeeSocialSecurity.idEmployee = body.idEmployee
-            employeeSocialSecurity.idContributorType = body.idContributorType
-            employeeSocialSecurity.idContributorSubType = body.idContributorSubType
-            employeeSocialSecurity.idEntityHealth = body.idEntityHealth
-            employeeSocialSecurity.idEntityPension = body.idEntityPension
-            employeeSocialSecurity.idEntitySeverance = body.idEntitySeverance
+            employeeSocialSecurity.createdAt = body.createdAt;
+            employeeSocialSecurity.createUser = body.createUser;
+            employeeSocialSecurity.updatedAt = body.updatedAt;
+            employeeSocialSecurity.updateUser = body.updateUser;
+            employeeSocialSecurity.isActive = body.isActive;
+            employeeSocialSecurity.idEmployee = body.idEmployee;
+            employeeSocialSecurity.idContributorType = body.idContributorType;
+            employeeSocialSecurity.idContributorSubType = body.idContributorSubType;
+            employeeSocialSecurity.idEntityHealth = body.idEntityHealth;
+            employeeSocialSecurity.idEntityPension = body.idEntityPension;
+            employeeSocialSecurity.idEntitySeverance = body.idEntitySeverance;
 
 
 

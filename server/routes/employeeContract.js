@@ -44,9 +44,11 @@ app.get('/', function(req, res) {
 // Obtener un contrato laboral por ID
 // ==========================================
 
-app.get('/:id', (req, res) => {
-    var id = req.params.id;
-    EmployeeContract.employeeContract.findByPk(id)
+app.get('/:idEmployee', (req, res) => {
+    // var id = req.params.id;
+    var idEmployee = req.params.idEmployee;
+    // EmployeeContract.employeeContract.findByPk(id)
+    EmployeeContract.employeeContract.findAll({ where: { idEmployee: idEmployee } })
         .then(employeeContract => {
 
             if (!employeeContract) {

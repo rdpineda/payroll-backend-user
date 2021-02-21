@@ -1,8 +1,8 @@
-const CostCenter = require('../models').costCenter
-const Area = require('../models').area
-const Subsidiary = require('../models').subsidiary
-const Position = require('../models').position
-const Employee = require('../models').employee
+const CostCenter = require('../models').costCenter;
+const Area = require('../models').area;
+const Subsidiary = require('../models').subsidiary;
+const Position = require('../models').position;
+const Employee = require('../models').employee;
 
 module.exports = (sequelize, DataTypes) => {
     const employeeJob = sequelize.define("employeeJob", {

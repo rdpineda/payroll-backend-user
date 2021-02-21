@@ -3,7 +3,7 @@ module.exports = (sequelizep, DataTypes) => {
     const state = sequelizep.define('state', {
         id: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV1,
             primaryKey: true
         },
         code: DataTypes.STRING,

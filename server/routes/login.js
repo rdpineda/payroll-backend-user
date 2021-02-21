@@ -304,9 +304,9 @@ async function obtenerEmpresas(id) {
         attributes: ['id', 'name', 'isActive', 'demoDay', 'img'],
         where: { idUser: id },
         raw: true
-    })
+    });
 
-    return empresas
+    return empresas;
 }
 
 

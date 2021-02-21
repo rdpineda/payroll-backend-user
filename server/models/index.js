@@ -26,7 +26,8 @@ fs
 
     })
     .forEach(file => {
-        const model = sequelize['import'](path.join(__dirname, file));
+        const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+        //const model = sequelize['import'](path.join(__dirname, file));
         db[model.name] = model;
 
 
@@ -44,6 +45,30 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+
+//Models/tables
+/* db.concept = require('../models/concept.js')(sequelize, Sequelize);
+db.accumulator = require('../models/accumulator.js')(sequelize, Sequelize);
+db.conceptAccumulator = require('../models/conceptAccumulator.js')(sequelize, Sequelize);
+ */
+//Relations
+
+/* db.accumulator.associate = () => {
+    db.accumulator.belongsToMany(db.concept, { as: 'accumulators', through: db.conceptAccumulator, foreignKey: 'accumulator_id' });
+}; */
+
+/* db.concept.belongsToMany(db.accumulator, {
+    through: "conceptAccumulator",
+    as: "concept",
+    foreignKey: "idConcept",
+});
+
+db.accumulator.belongsToMany(db.concept, {
+    through: "conceptAccumulator",
+    as: "accumulator",
+    foreignKey: "idAccumulator",
+});
+ */
 
 //console.log(db);
 

@@ -44,9 +44,11 @@ app.get('/', function(req, res) {
 // Obtener un historico salarial por ID
 // ==========================================
 
-app.get('/:id', (req, res) => {
-    var id = req.params.id;
-    EmployeeSalary.employeeSalary.findByPk(id)
+app.get('/:idEmployee', (req, res) => {
+    /* var id = req.params.id;
+    EmployeeSalary.employeeSalary.findByPk(id) */
+    var idEmployee = req.params.idEmployee;
+    EmployeeSalary.employeeSalary.findAll({ where: { idEmployee: idEmployee } })
         .then(employeeSalary => {
 
             if (!employeeSalary) {

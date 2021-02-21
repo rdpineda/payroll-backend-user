@@ -2,6 +2,7 @@ const ContractRegime = require('../models').contractRegime;
 const EmployeeType = require('../models').employeeType;
 const WorkingHour = require('../models').workingHour;
 const WorkPlaceRisks = require('../models').workPlaceRisks;
+const Employee = require('../models').employee;
 
 module.exports = (sequelize, DataTypes) => {
     const employeeWorking = sequelize.define("employeeWorking", {
@@ -17,6 +18,21 @@ module.exports = (sequelize, DataTypes) => {
         updatedAt: DataTypes.DATE,
         updateUser: DataTypes.STRING,
         isActive: DataTypes.BOOLEAN,
+
+        idEmployee: {
+            type: DataTypes.UUID,
+
+            references: {
+                // This is a reference to another model
+                model: Employee,
+
+                // This is the column name of the referenced model
+                key: 'id',
+
+                // This declares when to check the foreign key constraint. PostgreSQL only.
+                /* deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE */
+            }
+        },
 
         idContractRegime: {
             type: DataTypes.UUID,

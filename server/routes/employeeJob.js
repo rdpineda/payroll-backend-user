@@ -98,16 +98,16 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 
-            employeeJob.createdAt = body.createdAt
-            employeeJob.createUser = body.createUser
-            employeeJob.updatedAt = body.updatedAt
-            employeeJob.updateUser = body.updateUser
-            employeeJob.isActive = body.isActive
-            employeeJob.idEmployee = body.idEmployee
-            employeeJob.idCostCenter = body.idCostCenter
-            employeeJob.idArea = body.idArea
-            employeeJob.idSubsidiary = body.idSubsidiary
-            employeeJob.idPosition = body.idPosition
+            employeeJob.createdAt = body.createdAt;
+            employeeJob.createUser = body.createUser;
+            employeeJob.updatedAt = body.updatedAt;
+            employeeJob.updateUser = body.updateUser;
+            employeeJob.isActive = body.isActive;
+            employeeJob.idEmployee = body.idEmployee;
+            employeeJob.idCostCenter = body.idCostCenter;
+            employeeJob.idArea = body.idArea;
+            employeeJob.idSubsidiary = body.idSubsidiary;
+            employeeJob.idPosition = body.idPosition;
 
 
 

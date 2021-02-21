@@ -58,8 +58,10 @@ var genderRoutes = require('./server/routes/gender');
 var employeeRoutes = require('./server/routes/employee');
 var subsidiaryRoutes = require('./server/routes/subsidiary');
 var positionRoutes = require('./server/routes/position');
-var conceptGroupRoutes = require('./server/routes/conceptGroup');
+var conceptCategoryRoutes = require('./server/routes/conceptCategory');
 var conceptRoutes = require('./server/routes/concept');
+var accumulatorRoutes = require('./server/routes/accumulator');
+var conceptAccumulatorRoutes = require('./server/routes/conceptAccumulator');
 var contractRegimeRoutes = require('./server/routes/contractRegime');
 var employeeTypeRoutes = require('./server/routes/employeeType');
 var workingHourRoutes = require('./server/routes/workingHour');
@@ -74,6 +76,7 @@ var employeeSalaryRoutes = require('./server/routes/employeeSalary');
 var employeeJobRoutes = require('./server/routes/employeeJob');
 var employeePaymentRoutes = require('./server/routes/employeePayment');
 var employeeSocialSecurityRoutes = require('./server/routes/employeeSocialSecurity');
+var busquedaRoutes = require('./server/routes/busqueda');
 
 
 
@@ -124,8 +127,10 @@ app.use('/gender', genderRoutes);
 app.use('/employee', employeeRoutes);
 app.use('/subsidiary', subsidiaryRoutes);
 app.use('/position', positionRoutes);
-app.use('/conceptGroup', conceptGroupRoutes);
+app.use('/conceptCategory', conceptCategoryRoutes);
 app.use('/concept', conceptRoutes);
+app.use('/accumulator', accumulatorRoutes);
+app.use('/conceptAccumulator', conceptAccumulatorRoutes);
 app.use('/contractRegime', contractRegimeRoutes);
 app.use('/employeeType', employeeTypeRoutes);
 app.use('/contractType', contractTypeRoutes);
@@ -140,6 +145,7 @@ app.use('/employeeSalary', employeeSalaryRoutes);
 app.use('/employeeJob', employeeJobRoutes);
 app.use('/employeePayment', employeePaymentRoutes);
 app.use('/employeeSocialSecurity', employeeSocialSecurityRoutes);
+app.use('/busqueda', busquedaRoutes);
 
 /* app.use('/hospital', hospitalRoutes);
 app.use('/medico', medicoRoutes);

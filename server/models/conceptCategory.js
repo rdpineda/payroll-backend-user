@@ -1,10 +1,11 @@
 module.exports = (sequelizep, DataTypes) => {
-    const conceptGroup = sequelizep.define('conceptGroup', {
+    const conceptCategory = sequelizep.define('conceptCategory', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
             primaryKey: true
         },
+        code: DataTypes.STRING,
         description: DataTypes.STRING,
         createdAt: DataTypes.DATE,
         createUser: DataTypes.STRING,
@@ -14,6 +15,14 @@ module.exports = (sequelizep, DataTypes) => {
 
 
     }, { freezeTableName: true });
+
+    conceptCategory.associate = (models) => {
+        conceptCategory.hasMany(models.concept, {
+            as: 'concepto'
+        });
+        models.concept.belongsTo(models.conceptCategory, { foreignKey: 'conceptCategoryId' });
+
+    };
     /* console.log(usuario === sequelize.models.usuario); */
-    return conceptGroup;
-}
+    return conceptCategory;
+};

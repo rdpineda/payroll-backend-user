@@ -10,10 +10,14 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 var app = express();
 const Concept = require('../models');
+const Company = require('../models');
+const Accumulator = require('../models');
+const ConceptCategory = require('../models');
+
 
 
 //===================================================
-//Obtener todos los conceptos
+//Obtener todos los conceptos 
 //===================================================
 
 app.get('/', function(req, res) {
@@ -23,7 +27,7 @@ app.get('/', function(req, res) {
 
     /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
 
-    Concept.concept.findAll()
+    Concept.concept.findAll({ where: { companyId: null } })
         .then(concept => {
 
             res.status(200).json({
@@ -37,15 +41,121 @@ app.get('/', function(req, res) {
                 mensaje: 'Error cargando conceptos',
                 errors: err
             });
-        })
+        });
 });
+
+
+
+
+
+
+
+//===================================================
+//Obtener todos los conceptos con acumulador
+//===================================================
+
+app.get('/accumulator', function(req, res) {
+
+    /* var desde = req.query.desde || 0;
+    desde = Number(desde); */
+
+    /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
+
+    Concept.concept.findAll({ include: Accumulator.accumulator })
+        .then(concept => {
+
+            res.status(200).json({
+                ok: true,
+                concept: concept
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error cargando conceptos',
+                errors: err
+            });
+        });
+});
+
+
+//===================================================
+//Obtener todos los conceptos con categoria
+//===================================================
+
+app.get('/category', function(req, res) {
+
+    /* var desde = req.query.desde || 0;
+    desde = Number(desde); */
+
+    /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
+
+    Concept.concept.findAll({ include: ConceptCategory.conceptCategory })
+        .then(concept => {
+
+            res.status(200).json({
+                ok: true,
+                concept: concept
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error cargando conceptos',
+                errors: err
+            });
+        });
+});
+
+
+//===================================================
+//Obtener todos los conceptos con categoria SALARIO
+//===================================================
+
+app.get('/category/salar/:idcompany', function(req, res) {
+    var idcompany = req.params.idcompany;
+
+    /* var desde = req.query.desde || 0;
+    desde = Number(desde); */
+
+    /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
+
+    Concept.concept.findAll({
+            include: [{
+                model: ConceptCategory.conceptCategory,
+                where: { code: 'SALAR' }
+
+
+            }],
+            where: { companyId: idcompany },
+            order: ['code']
+
+
+        })
+        .then(concept => {
+
+            res.status(200).json({
+                ok: true,
+                concept: concept
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error cargando conceptos',
+                errors: err
+            });
+        });
+});
+
+
 
 
 // ==========================================
 // Obtener un concepto por ID
 // ==========================================
 
-app.get('/concept/:id', (req, res) => {
+app.get('/:id', (req, res) => {
     var id = req.params.id;
     Concept.concept.findByPk(id)
         .then(concept => {
@@ -69,7 +179,7 @@ app.get('/concept/:id', (req, res) => {
                 mensaje: 'Error al buscar concepto',
                 errors: err
             });
-        })
+        });
 
 });
 
@@ -91,12 +201,17 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
             concept.code = body.code;
             concept.description = body.description;
-            concept.idConcepGroup = body.idConcepGroup;
-            concept.idConcepType = body.idConcepType;
-            concept.idCompany = body.idCompany;
-            concept.isActive = body.isActive;
+            concept.companyId = body.companyId;
             concept.account = body.account;
-            concept.counterPart = body.counterPart
+            concept.counterPart = body.counterPart;
+            concept.conceptTypeId = body.conceptTypeId;
+            concept.conceptCategoryId = body.conceptCategoryId;
+            concept.createUser = body.createUser;
+            concept.updateUser = body.updateUser;
+            concept.isActive = body.isActive;
+
+
+
 
 
             concept.save(req.body)
@@ -115,7 +230,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                         error: err
                     });
 
-                })
+                });
 
         })
         .catch(err => {
@@ -125,7 +240,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
                 errors: { message: 'No existe un concepto con ese ID' }
             });
 
-        })
+        });
 
 
 
@@ -150,15 +265,14 @@ app.post('/', (req, res) => {
     var concept = new Concept.concept({
         code: body.code,
         description: body.description,
+        companyId: body.companyId,
         createUser: body.createUser,
         updateUser: body.updateUser,
         isActive: body.isActive,
-        idConcepGroup: body.idConcepGroup,
-        idConcepType: body.idConcepType,
-        idCompany: body.idCompany,
         account: body.account,
-        counterPart: body.counterPart
-
+        counterPart: body.counterPart,
+        conceptTypeId: body.conceptTypeId,
+        conceptCategoryId: body.conceptCategoryId,
 
     });
 
@@ -174,7 +288,7 @@ app.post('/', (req, res) => {
         .catch(err => {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear un centro de costo',
+                mensaje: 'Error al crear un concepto',
                 err
             });
 
@@ -182,6 +296,78 @@ app.post('/', (req, res) => {
 
 
 });
+
+
+//===================================================
+//crear los concepto estandar en cada cliente
+//===================================================
+
+app.post('/estandar/:id', async(req, res) => {
+    var id = req.params.id;
+    /*  var body = req.body;
+
+     var concept = new Concept.concept({
+         code: body.code,
+         description: body.description,
+         companyId: body.companyId,
+         createUser: body.createUser,
+         updateUser: body.updateUser,
+         isActive: body.isActive,
+         account: body.account,
+         counterPart: body.counterPart,
+         conceptTypeId: body.conceptTypeId,
+         conceptCategoryId: body.conceptCategoryId,
+
+     }); */
+
+    Company.company.findOne({
+            where: { id: id }
+        })
+        .then(async companyDB => {
+            console.log('primera consulta', companyDB);
+
+            /*  if (!companyDB) {
+                return res.status(400).json({
+                    ok: false,
+                    err: {
+                        mensaje: 'usuario no existe'
+                    }
+                });
+            } 
+ */
+
+            Concept.concept.bulkCreate(await obtenerConceptos(), { individualHooks: true })
+                .then(conceptGuardado => {
+                    console.log('hola concepto', conceptGuardado.length);
+                    for (var i = 0; i < conceptGuardado.length; i++) {
+                        Concept.concept.update({ companyId: companyDB.id }, /* set attributes' value */ { where: { id: conceptGuardado[i].id } } /* where criteria */ );
+                        console.log('hola concepto guardado', conceptGuardado[i].id);
+                    }
+
+                    res.status(201).json({
+                        ok: true,
+                        concept: conceptGuardado,
+
+                        // usuarioToken: req.usuario
+
+                    });
+                    console.log('hola concepto2', conceptGuardado[0].id);
+                })
+                .catch(err => {
+                    return res.status(400).json({
+                        ok: false,
+                        mensaje: 'Error al crear un concepto',
+                        err
+                    });
+
+                });
+
+        });
+});
+
+
+
+
 
 //===================================================
 //Eliminar un concepto
@@ -231,7 +417,7 @@ app.get('/:idcompany', (req, res) => {
     // var idconceptGroup = '0f91a6e0-8192-4a2e-8022-989257fc2896';
     Concept.concept.findAll({
             where: {
-                [Op.or]: [{ idCompany: idcompany }, { idCompany: null }]
+                [Op.or]: [{ idCompany: idcompany }]
             }
         })
         .then(concept => {
@@ -254,9 +440,22 @@ app.get('/:idcompany', (req, res) => {
                 mensaje: 'Error al buscar conceptos',
                 err: err
             });
-        })
+        });
 
 });
+
+
+async function obtenerConceptos() {
+
+    var conceptos = await Concept.concept.findAll({
+
+        attributes: ['code', 'description', 'companyId', 'createdAt', 'createUser', 'updatedAt', 'updateUser', 'isActive', 'account', 'counterPart', 'conceptTypeId', 'conceptCategoryId'],
+        where: { companyId: null },
+        raw: true
+    });
+
+    return conceptos;
+}
 
 
 module.exports = app;

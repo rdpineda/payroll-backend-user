@@ -9,32 +9,28 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 
 var app = express();
-const State = require('../models');
+const ConceptCategory = require('../models');
+const Concept = require('../models');
 
 
 //===================================================
-//Obtener todos los estados
+//Obtener todos los grupos de conceptos
 //===================================================
 
 app.get('/', function(req, res) {
 
-    /* var desde = req.query.desde || 0;
-    desde = Number(desde); */
-
-    /*  Usuario.user.findAll({ atributes: ['id', 'name', 'userName'] }, (err, usuarios) => { */
-
-    State.state.findAll()
-        .then(state => {
+    ConceptCategory.conceptCategory.findAll({ include: Concept.concept })
+        .then(conceptCategory => {
 
             res.status(200).json({
                 ok: true,
-                state: state
+                conceptCategory: conceptCategory
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando departamentos',
+                mensaje: 'Error cargando categoria de conceptos',
                 errors: err
             });
         })
@@ -42,31 +38,31 @@ app.get('/', function(req, res) {
 
 
 // ==========================================
-// Obtener un estado por ID
+// Obtener un grupo de conceptos por ID
 // ==========================================
 
 app.get('/:id', (req, res) => {
     var id = req.params.id;
-    State.state.findByPk(id)
-        .then(state => {
+    ConceptCategory.conceptCategory.findByPk(id)
+        .then(conceptCategory => {
 
-            if (!state) {
+            if (!conceptCategory) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'el departamento con ' + id + 'no existe',
-                    errors: { message: 'No existe un departamento con ese ID' }
+                    mensaje: 'la categoria de conceptos con ' + id + 'no existe',
+                    errors: { message: 'No existe la categoria de conceptos con ese ID' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                state: state
+                conceptCategory: conceptCategory
 
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar un departamento',
+                mensaje: 'Error al buscar una categoria de conceptos',
                 errors: err
             });
         })

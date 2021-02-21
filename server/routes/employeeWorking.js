@@ -44,19 +44,20 @@ app.get('/', function(req, res) {
 // Obtener un empleado laboral por ID
 // ==========================================
 
-app.get('/:id', (req, res) => {
-    var id = req.params.id;
-    EmployeeWorking.employeeWorking.findByPk(id)
+app.get('/:idEmployee', (req, res) => {
+    var idEmployee = req.params.idEmployee;
+    // EmployeeWorking.employeeWorking.findByPk(id)
+    EmployeeWorking.employeeWorking.findAll({ where: { idEmployee: idEmployee } })
         .then(employeeWorking => {
 
-            /* if (!employeeWorking) {
+            if (!employeeWorking) {
                 return res.status(400).json({
                     ok: false,
                     mensaje: 'El empleado con el id ' + id + 'no existe',
                     errors: { message: 'No existe el empleado ese ID' },
 
                 });
-            } */
+            }
             res.status(200).json({
                 ok: true,
                 employeeWorking: employeeWorking
@@ -80,34 +81,40 @@ app.get('/:id', (req, res) => {
 
 app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE_o_mismoUsuario], (req, res) => {
 
+    var idEmployee = req.params.idEmployee;
+    // EmployeeJob.employeeJob.findByPk(idEmployee)
+
     var id = req.params.id;
     var body = req.body;
 
     EmployeeWorking.employeeWorking.findByPk(id)
+        // EmployeeWorking.employeeWorking.findAll({ where: { id: id } })
         .then(employeeWorking => {
+            console.log('back', employeeWorking);
+            /*  if (!employeeWorking) {
 
-            /* if (!usuario) {
+                 return res.status(400).json({
+                     ok: false,
+                     mensaje: 'El empleado con el id' + idEmployee + 'no existe',
+                     errors: { message: 'No existe un empleado con ese ID' }
 
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'El usuario con el id' + id + 'no existe',
-                    errors: { message: 'No existe un usuario con ese ID' }
-                });
-            } */
-
+                 });
+             } */
 
 
-            employeeWorking.transportAssistence = body.transportAssistence
-            employeeWorking.variableSalary = body.variableSalary
-            employeeWorking.createdAt = body.createdAt
-            employeeWorking.createUser = body.createUser
-            employeeWorking.updatedAt = body.updatedAt
-            employeeWorking.updateUser = body.updateUser
-            employeeWorking.isActive = body.isActive
-            employeeWorking.idContractRegime = body.idContractRegime
-            employeeWorking.idEmployeeType = body.idEmployeeType
-            employeeWorking.idWorkPlaceRisks = body.idWorkPlaceRisks
-            employeeWorking.idWorkingHour = body.idWorkingHour
+
+            employeeWorking.transportAssistence = body.transportAssistence;
+            employeeWorking.variableSalary = body.variableSalary;
+            employeeWorking.createdAt = body.createdAt;
+            employeeWorking.createUser = body.createUser;
+            employeeWorking.updatedAt = body.updatedAt;
+            employeeWorking.updateUser = body.updateUser;
+            employeeWorking.isActive = body.isActive;
+            employeeWorking.idEmployee = body.idEmployee;
+            employeeWorking.idContractRegime = body.idContractRegime;
+            employeeWorking.idEmployeeType = body.idEmployeeType;
+            employeeWorking.idWorkPlaceRisks = body.idWorkPlaceRisks;
+            employeeWorking.idWorkingHour = body.idWorkingHour;
 
 
             employeeWorking.save(req.body)
@@ -165,6 +172,7 @@ app.post('/', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_ROLE
         createUser: body.createUser,
         updateUser: body.updateUser,
         isActive: body.isActive,
+        idEmployee: body.idEmployee,
         idContractRegime: body.idContractRegime,
         idEmployeeType: body.idEmployeeType,
         idWorkPlaceRisks: body.idWorkPlaceRisks,

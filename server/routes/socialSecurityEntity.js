@@ -80,9 +80,9 @@ app.get('/:id/socialSecurityEntity', (req, res) => {
 
 
 
-app.get('/caja/:id', function(req, res) {
+app.get('/caja', function(req, res) {
     var id = req.params.id;
-    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: id }, raw: true })
+    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: '85c0ad60-034f-48d5-b798-fd55ad0e92fd' }, raw: true })
         .then(socialSecurityEntity => {
 
             res.status(200).json({
@@ -106,9 +106,9 @@ app.get('/caja/:id', function(req, res) {
 
 
 
-app.get('/riesgo/:id', function(req, res) {
+app.get('/riesgo', function(req, res) {
     var id = req.params.id;
-    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: id }, raw: true })
+    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: 'a9bd6d67-7578-497a-b1b9-118c897e9db3' }, raw: true })
         .then(socialSecurityEntity => {
 
             res.status(200).json({
@@ -133,9 +133,9 @@ app.get('/riesgo/:id', function(req, res) {
 
 
 
-app.get('/salud/:id', function(req, res) {
+app.get('/salud', function(req, res) {
     var id = req.params.id;
-    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: id }, raw: true })
+    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: 'aff13277-d855-44dc-a7b2-55fb0d24d806' }, raw: true })
         .then(socialSecurityEntity => {
 
             res.status(200).json({
@@ -159,9 +159,9 @@ app.get('/salud/:id', function(req, res) {
 
 
 
-app.get('/pension/:id', function(req, res) {
+app.get('/pension', function(req, res) {
     var id = req.params.id;
-    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: id }, raw: true })
+    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: 'c4c1704c-bed3-428b-92b7-98641dcf75a9' }, raw: true })
         .then(socialSecurityEntity => {
 
             res.status(200).json({
@@ -172,7 +172,7 @@ app.get('/pension/:id', function(req, res) {
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando entidades de riesgos',
+                mensaje: 'Error cargando entidades de pension',
                 errors: err
             });
         })
@@ -185,9 +185,9 @@ app.get('/pension/:id', function(req, res) {
 
 
 
-app.get('/cesantia/:id', function(req, res) {
+app.get('/cesantia', function(req, res) {
     var id = req.params.id;
-    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: id }, raw: true })
+    SocialSecurityEntity.socialSecurityEntity.findAll({ where: { idSocialSecurityEntityType: '835d136e-a19a-4061-8a06-3388f233877e' }, raw: true })
         .then(socialSecurityEntity => {
 
             res.status(200).json({
@@ -198,7 +198,7 @@ app.get('/cesantia/:id', function(req, res) {
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando entidades de riesgos',
+                mensaje: 'Error cargando fondo de cesantias',
                 errors: err
             });
         })

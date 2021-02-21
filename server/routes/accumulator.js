@@ -6,30 +6,44 @@ var mdAutenticacion = require('../../middlewares/autenticacion');
 
 
 //var SEED = require('../config/config').SEED;
-
+/* const db = require("../models");
+const concept = db.concept;
+const Accumulator = db.accumulator; */
 
 var app = express();
-const ConceptGroup = require('../models');
+const Accumulator = require('../models');
+const Concept = require('../models');
+
+
+
 
 
 //===================================================
-//Obtener todos los grupos de conceptos
+//Obtener todos los acumuladores con concepto
 //===================================================
 
 app.get('/', function(req, res) {
 
-    ConceptGroup.conceptGroup.findAll()
-        .then(conceptGroup => {
+    Accumulator.accumulator.findAll({
+            include: Concept.concept
+                /* include: [{
+                    model: Concept.concept,
+                    as: "conceptos",
+                    attributes: ["id", "description"],
+                }] */
+
+        })
+        .then(accumulator => {
 
             res.status(200).json({
                 ok: true,
-                conceptGroup: conceptGroup
+                accumulator: accumulator
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error cargando grupos de conceptos',
+                mensaje: 'Error cargando acumuladores',
                 errors: err
             });
         })
@@ -37,36 +51,39 @@ app.get('/', function(req, res) {
 
 
 // ==========================================
-// Obtener un grupo de conceptos por ID
+// Obtener un acumulador por ID
 // ==========================================
 
 app.get('/:id', (req, res) => {
     var id = req.params.id;
-    ConceptGroup.conceptGroup.findByPk(id)
-        .then(conceptGroup => {
+    Accumulator.accumulator.findByPk(id)
+        .then(accumulator => {
 
-            if (!conceptGroup) {
+            if (!accumulator) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'el grupo de conceptos con ' + id + 'no existe',
-                    errors: { message: 'No existe el grupo de conceptos con ese ID' }
+                    mensaje: 'el acumulador con ' + id + 'no existe',
+                    errors: { message: 'No existe acumulador con ese ID' }
                 });
             }
             res.status(200).json({
                 ok: true,
-                conceptGroup: conceptGroup
+                accumulator: accumulator
 
             });
         })
         .catch(err => {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar un grupo de conceptos',
+                mensaje: 'Error al buscar acumuladores',
                 errors: err
             });
         })
 
 });
+
+
+
 
 
 module.exports = app;

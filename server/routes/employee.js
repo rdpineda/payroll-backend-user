@@ -37,7 +37,7 @@ app.get('/', function(req, res) {
                 mensaje: 'Error cargando Empleados',
                 errors: err
             });
-        })
+        });
 });
 
 // ==========================================
@@ -111,7 +111,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
             employee.idCountry = body.idCountry;
             employee.isActive = body.isActive;
             employee.idGender = body.idGender;
-            employee.idIdentificationType = body.idIdentificationType
+            employee.idIdentificationType = body.idIdentificationType;
 
 
             employee.save(req.body)
@@ -255,30 +255,48 @@ app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN
 // Obtener empleados por compañia
 // ==========================================
 
-app.get('/:idcompany', (req, res) => {
+app.get('/:idcompany', async(req, res, next) => {
     var idcompany = req.params.idcompany;
-    Employee.employee.findAll({ where: { idCompany: idcompany } })
-        .then(employee => {
+    var desde = req.query.desde || 0;
+    desde = Number(desde);
 
-            if (!employee) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'La compañia ' + id + 'no tiene empleados',
-                    errors: { message: 'No existe un empleado para esa compañia' }
-                });
-            }
-            res.status(200).json({
-                ok: true,
-                employee: employee
-            });
-        })
-        .catch(err => {
-            return res.status(500).json({
+
+    Employee.employee.findAll({
+        where: { idCompany: idcompany },
+        limit: 6,
+        offset: (desde),
+        order: [
+            ['firstname', 'DESC']
+        ]
+    })
+
+    .then(async employee => {
+
+        if (!employee) {
+            return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al buscar empleados',
-                errors: err
+                mensaje: 'La compañia ' + id + 'no tiene empleados',
+                errors: { message: 'No existe un empleado para esa compañia' }
             });
-        })
+        }
+
+        conteo = await Employee.employee.count({ where: { idCompany: idcompany } });
+        res.status(200).json({
+            ok: true,
+            employee: employee,
+            total: conteo
+        });
+
+    })
+
+
+    .catch(err => {
+        return res.status(500).json({
+            ok: false,
+            mensaje: 'Error al buscar empleados',
+            errors: err
+        });
+    })
 
 });
 

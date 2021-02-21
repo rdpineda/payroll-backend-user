@@ -165,6 +165,8 @@ app.post('/', (req, res) => {
 
     company.save(req.body)
         .then(companyGuardado => {
+
+
             res.status(201).json({
                 ok: true,
                 company: companyGuardado,
