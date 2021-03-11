@@ -38,8 +38,8 @@ app.use(bodyParser.json())
 
 var appRoutes = require('./server/routes/app');
 var usuarioRoutes = require('./server/routes/usuario');
+var companyoldRoutes = require('./server/routes/companyold');
 var companyRoutes = require('./server/routes/company');
-var companyInfoRoutes = require('./server/routes/companyInfo');
 var companyPaymentRoutes = require('./server/routes/companyPayment');
 var companyPayrollRoutes = require('./server/routes/companyPayroll');
 var countryRoutes = require('./server/routes/country');
@@ -107,8 +107,8 @@ app.use('/uploads', serveIndex(__dirname + '/uploads')); */
 // rutas
 
 app.use('/usuario', usuarioRoutes);
+app.use('/companyold', companyRoutes);
 app.use('/company', companyRoutes);
-app.use('/companyInfo', companyInfoRoutes);
 app.use('/companyPayment', companyPaymentRoutes);
 app.use('/companyPayroll', companyPayrollRoutes);
 app.use('/country', countryRoutes);

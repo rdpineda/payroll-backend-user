@@ -183,6 +183,8 @@ app.post('/', async(req, res) => {
 
             var empresas = await obtenerEmpresas(usuarioDB.id);
 
+
+
             var menu = obtenerMenu(usuarioDB.role);
             usuarioDB.password = ':)';
             var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 });
@@ -226,37 +228,33 @@ function obtenerMenu(role) {
             icono: 'mdi mdi-gauge',
             submenu: [
                 //{ titulo: 'Usuarios', url: '/usuarios' },
-                /* { titulo: 'Hospitales', url: '/hospitales' },
-                { titulo: 'Medicos', url: '/medicos' } */
+                // { titulo: 'Hospitales', url: '/hospitales' },
+                //{ titulo: 'Medicos', url: '/medicos' } 
             ]
         },
 
         {
             titulo: 'Compañia',
             url: '/company',
-            icono: 'mdi mdi-folder-lock-open',
+            icono: 'mdi mdi-home',
             submenu: [
-                /*  //{ titulo: 'Usuarios', url: '/usuarios' },
-                 { titulo: 'Hospitales', url: '/hospitales' },
-                 { titulo: 'Medicos', url: '/medicos' } */
+                //{ titulo: 'Usuarios', url: '/usuarios' },
+                //{ titulo: 'Hospitales', url: '/hospitales' },
+                //{ titulo: 'Medicos', url: '/medicos' } 
             ]
         },
 
         {
             titulo: 'Empleados',
             url: '/employees',
-            icono: 'mdi mdi-folder-lock-open',
-            submenu: [
-                /*  //{ titulo: 'Usuarios', url: '/usuarios' },
-                 { titulo: 'Hospitales', url: '/hospitales' },
-                 { titulo: 'Medicos', url: '/medicos' } */
-            ]
+            icono: 'mdi mdi-account-multiple',
+            submenu: []
         },
 
 
         {
             titulo: 'Nóminas',
-            icono: 'mdi mdi-folder-lock-open',
+            icono: 'mdi mdi-cash-100',
             submenu: [
                 { titulo: 'Ordinarias', url: '/usuarios' },
                 { titulo: 'Especiales', url: '/hospitales' },
@@ -284,11 +282,11 @@ function obtenerMenu(role) {
 
     ];
 
-    if (role === '37188fd7-f43b-4874-bd1a-54c5cce8afee') {
+    /* if (role === '37188fd7-f43b-4874-bd1a-54c5cce8afee') {
 
         menu[1].submenu.unshift({ titulo: 'Usuarios', url: '/usuarios' });
 
-    }
+    } */
 
     return menu;
 

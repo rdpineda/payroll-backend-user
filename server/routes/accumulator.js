@@ -34,11 +34,11 @@ app.get('/', function(req, res) {
 
         })
         .then(accumulator => {
-
-            res.status(200).json({
-                ok: true,
-                accumulator: accumulator
-            });
+            console.log(accumulator),
+                res.status(200).json({
+                    ok: true,
+                    accumulator: accumulator
+                });
         })
         .catch(err => {
             return res.status(500).json({

@@ -137,7 +137,7 @@ app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaADMIN_RO
 
 
 //===================================================
-//crear una nueva empresa
+//crear una nueva empresa TABLA COMPAÑIA NOMINA
 //===================================================
 
 app.post('/', (req, res) => {

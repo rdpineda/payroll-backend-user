@@ -304,21 +304,6 @@ app.post('/', (req, res) => {
 
 app.post('/estandar/:id', async(req, res) => {
     var id = req.params.id;
-    /*  var body = req.body;
-
-     var concept = new Concept.concept({
-         code: body.code,
-         description: body.description,
-         companyId: body.companyId,
-         createUser: body.createUser,
-         updateUser: body.updateUser,
-         isActive: body.isActive,
-         account: body.account,
-         counterPart: body.counterPart,
-         conceptTypeId: body.conceptTypeId,
-         conceptCategoryId: body.conceptCategoryId,
-
-     }); */
 
     Company.company.findOne({
             where: { id: id }
@@ -326,15 +311,6 @@ app.post('/estandar/:id', async(req, res) => {
         .then(async companyDB => {
             console.log('primera consulta', companyDB);
 
-            /*  if (!companyDB) {
-                return res.status(400).json({
-                    ok: false,
-                    err: {
-                        mensaje: 'usuario no existe'
-                    }
-                });
-            } 
- */
 
             Concept.concept.bulkCreate(await obtenerConceptos(), { individualHooks: true })
                 .then(conceptGuardado => {

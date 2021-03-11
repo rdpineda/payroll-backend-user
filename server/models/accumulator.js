@@ -48,7 +48,6 @@ module.exports = (sequelizep, DataTypes) => {
         accumulator.belongsToMany(models.concept, {
             as: "acumulador",
             through: models.conceptAccumulator,
-
             foreignKey: "accumulator_id",
         });
     };
